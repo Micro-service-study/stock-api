@@ -1,0 +1,24 @@
+version: "3.9"
+   
+services:
+  db-stock:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+
+  stock-api:
+    container_name: stock-api
+    build: ./stock-api/
+    command: python ./stock-api/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db-stock
